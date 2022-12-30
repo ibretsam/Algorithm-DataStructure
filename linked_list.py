@@ -113,6 +113,11 @@ class LinkedList:
         return current
     
     def remove_at(self, index):
+        """
+        Removes Node at the index
+        Returns the node or None
+        Takes O(n) time
+        """
         current = self.head
         if index == 0 or index == 1:
             self.head = current.next_node
