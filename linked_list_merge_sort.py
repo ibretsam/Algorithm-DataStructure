@@ -1,36 +1,40 @@
 from linked_list import LinkedList
 
 def merge_sort(linked_list):
-    if linked_list.size() == 1 or linked_list.is_empty():
+    """
+    Sorts a linked list in ascending order
+    - Recursively divide the linked list into sublists containing a single node
+    - Repeatedly merge the sublists to produce sorted sublists until one remains
+    
+    Returns a sorted linked list
+    """
+    if linked_list.size() == 1 or linked_list.head is None:
         return linked_list
-    else:
-        left_half, right_half = split(linked_list)
-        left = merge_sort(left_half)
-        right = merge_sort(right_half)
-        return merge(left, right)
+
+    left_half, right_half = split(linked_list)
+    left = merge_sort(left_half)
+    right = merge_sort(right_half)
+
+    return merge(left, right)
     
 def split(linked_list):
-    if linked_list == None or linked_list.head == None:
+    """
+    
+    """
+    if linked_list == None or linked_list.is_empty():
         left_half = linked_list
         right_half = None
-        
-        print(left_half)
-        print(right_half)
         return left_half, right_half
-    
     else:
         size = linked_list.size()
         mid = size // 2
         mid_node = linked_list.node_at_index(mid - 1)
-        
         left_half = linked_list
         right_half = LinkedList()
         right_half.head = mid_node.next_node
         mid_node.next_node = None
-        
-        print(left_half)
-        print(right_half)
         return left_half, right_half
+    
     
 def merge(left, right):
     """
@@ -38,28 +42,35 @@ def merge(left, right):
     Returns a new merged list
     """
     
-    l = LinkedList()
-    i = 0
-    j = 0
+    merged = LinkedList()
+    merged.add(0)
+
+    left_head = left.head
+    right_head = right.head
     
-    l.add(0)
+    current = merged.head
     
-    while i < left.size() and j < right.size():
-        if left.node_at_index(i).data < right.node_at_index(j).data:
-            l.insert(left.node_at_index(i).data, l.size())
-            i += 1
+    while left_head or right_head:
+        if left_head is None:
+            current.next_node = right_head
+            right_head = right_head.next_node
+        elif right_head is None:
+            current.next_node = left_head
+            left_head = left_head.next_node
         else:
-            l.insert(right.node_at_index(j).data, l.size())
-            
-    while i < left.size():
-        l.insert(left.node_at_index(i).data, l.size())
-        i += 1
+            if left_head.data < right_head.data:
+                current.next_node = left_head
+                left_head = left_head.next_node
+            else:
+                current.next_node = right_head
+                right_head = right_head.next_node
+        current = current.next_node
         
-    while j < right.size():
-        l.insert(right.node_at_index(j).data, l.size())
-        j += 1
-        
-    return l
+    head = merged.head.next_node
+    merged.head = head
+    
+    return merged
+    
 
 l = LinkedList()
 l.add(25)
@@ -70,4 +81,8 @@ l.add(9)
 l.add(11)
 l.add(3)
 
+print("Original linked list:")
+print(l)
+
+print("Sorted linked list:")
 print(merge_sort(l))
